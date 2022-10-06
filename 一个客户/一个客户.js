@@ -35,6 +35,7 @@ export class groupban extends plugin {
     }
 }
 
+
 export class kehuguiling extends plugin {
     constructor() {
         super({

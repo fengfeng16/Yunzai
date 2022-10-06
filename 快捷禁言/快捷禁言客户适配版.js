@@ -2,6 +2,7 @@ import plugin from '../../lib/plugins/plugin.js'
 import { segment } from "oicq"
 import common from '../../lib/common/common.js';
 
+
 export class jinyan extends plugin {
     constructor() {
         super({

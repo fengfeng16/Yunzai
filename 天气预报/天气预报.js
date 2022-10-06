@@ -2,7 +2,7 @@ import plugin from '../../lib/plugins/plugin.js';
 import common from '../../lib/common/common.js';
 import { segment } from "oicq";
 import fetch from "node-fetch";
-//本插件作者：水视频的枫枫
+
 export class tianqiyubao extends plugin {
     constructor() {
         super({
@@ -40,18 +40,19 @@ export class tianqiyubao extends plugin {
             user_id: Bot.uin,
           };
         let msgList=[]
-        if(res.desc=="invilad-citykey"){
-            e.reply([segment.at(e.sender.user_id),` ${place}并不是一个正确的地名，请输入正确的地名`],true)
+        if(res.success==false){
+            e.reply([segment.at(e.sender.user_id),res.message],true)
             return false;
-        }else if (res.desc=="OK"){
-            e.reply(`${res.data.city}近期天气`)
+        }else if (res.success==true){
+            e.reply(`${place}近期天气`)
             await common.sleep(500)
-            for(let i = 0;i<getJsonLength(res.data.forecast[i])-1;i++){
-                allmsg[i]=`日期：${res.data.forecast[i].date}
-最高温度：${res.data.forecast[i].high}
-最低温度：${res.data.forecast[i].low}
-风向：${res.data.forecast[i].fengxiang}
-天气：${res.data.forecast[i].type}`
+            for(let i = 0;i<getJsonLength(res.data[i])-1;i++){
+                allmsg[i]=`日期：${res.data[i].date}
+最高温度：${res.data[i].high}
+最低温度：${res.data[i].low}
+风向：${res.data[i].fengxiang}
+风力：${res.data[i].fengli}
+天气：${res.data[i].type}`
                 msgList.push({
                     message: {type: "text",text: `${allmsg[i]}`},
                     ...forwarder,

@@ -3,6 +3,10 @@ import common from '../../lib/common/common.js';
 import { segment } from "oicq";
 import fetch from "node-fetch";
 import fs from "fs";
+import ffmpeg from 'fluent-ffmpeg';
+import ffmpegInstaller from '@ffmpeg-installer/ffmpeg';
+
+ffmpeg.setFfmpegPath(ffmpegInstaller.path);
 //本插件作者：水视频的枫枫
 export class yuyinshengcheng extends plugin {
     constructor() {
@@ -29,6 +33,12 @@ export class yuyinshengcheng extends plugin {
 	 * @param e oicq传递的事件参数e
 	 */
     async yuyinshengcheng(e) {
+        fs.mkdir("./resources/yuyin/",function(err){
+            if (err) {
+                return
+            }
+            console.log("目录创建成功。");
+         });
         if(!e.msg.includes(`派蒙`)){
             let msg=e.msg.replace(/#生成语音|#语音生成|：|:/g,"");
             let url=`https://xiaoapi.cn/API/tts.php?msg=${msg}`
@@ -51,8 +61,11 @@ export class yuyinshengcheng extends plugin {
                             else console.log("下载成功");
                 });
             })) 
+            await ffmpeg(`./resources/yuyin/语音生成-${msg}.mp3`).outputOptions([
+                '-ar 8000',
+            ]).save(`./resources/yuyin/语音生成-${msg}.amr`)
             await common.sleep(500)
-            e.reply(segment.record(`./resources/yuyin/语音生成-${msg}.mp3`));
+            e.reply(segment.record(`./resources/yuyin/语音生成-${msg}.amr`));
             await common.sleep(500)
 
 
@@ -79,8 +92,12 @@ export class yuyinshengcheng extends plugin {
                             else console.log("下载成功");
                 });
             })) 
+            await ffmpeg(`./resources/yuyin/语音生成派蒙-${msg}.mp3`)
+            .outputOptions([
+                '-ar 8000',
+            ]).save(`./resources/yuyin/语音生成派蒙-${msg}.amr`)
             await common.sleep(500)
-            e.reply(segment.record(`./resources/yuyin/语音生成派蒙-${msg}.mp3`));
+            e.reply(segment.record(`./resources/yuyin/语音生成派蒙-${msg}.amr`));
             await common.sleep(500)
 
 
